@@ -915,7 +915,7 @@ void wifi_manager( void * pvParameters ){
 						}
 
 						/* save empty connection info in NVS memory */
-						wifi_manager_save_sta_config();
+						//wifi_manager_save_sta_config();
 
 						/* start SoftAP */
 						wifi_manager_send_message(ORDER_START_AP, NULL);
