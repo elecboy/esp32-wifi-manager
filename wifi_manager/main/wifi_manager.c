@@ -584,7 +584,7 @@ void wifi_manager_filter_unique( wifi_ap_record_t * aplist, uint16_t * aps) {
 		/* remove the identical SSID+authmodes */
 		for(int j=i+1; j<*aps;j++) {
 			wifi_ap_record_t * ap1 = &aplist[j];
-			if ( (strcmp((const char *)ap->ssid, (const char *)ap1->ssid)==0) && 
+			if ( (strcmp((const char *)ap->ssid, (const char *)ap1->ssid)==0) &&
 			     (ap->authmode == ap1->authmode) ) { /* same SSID, different auth mode is skipped */
 				/* save the rssi for the display */
 				if ((ap1->rssi) > (ap->rssi)) ap->rssi=ap1->rssi;
@@ -730,7 +730,6 @@ void wifi_manager( void * pvParameters ){
 	ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
 	ESP_ERROR_CHECK(esp_wifi_start());
 
-
 	/* start http server */
 	http_server_start();
 
@@ -820,6 +819,7 @@ void wifi_manager( void * pvParameters ){
 				else{
 					/* update config to latest and attempt connection */
 					ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, wifi_manager_get_wifi_sta_config()));
+					ESP_ERROR_CHECK(tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA, &wifi_settings.ap_ssid) );
 					ESP_ERROR_CHECK(esp_wifi_connect());
 				}
 
@@ -1025,5 +1025,3 @@ void wifi_manager( void * pvParameters ){
 	vTaskDelete( NULL );
 
 }
-
-
