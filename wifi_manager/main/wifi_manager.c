@@ -54,7 +54,8 @@ Contains the freeRTOS task and all necessary support
 #include "wifi_manager.h"
 #include "dns_server.h"
 
-
+//don't clear sta info when failed
+#define NOT_CLEAR_STA 1
 
 /* objects used to manipulate the main queue of events */
 QueueHandle_t wifi_manager_queue;
@@ -75,7 +76,7 @@ void (**cb_ptr_arr)(void*) = NULL;
 static const char TAG[] = "wifi_manager";
 
 /* @brief task handle for the main wifi_manager task */
-static TaskHandle_t task_wifi_manager = NULL;
+TaskHandle_t task_wifi_manager = NULL;
 
 /**
  * The actual WiFi settings in use
@@ -932,7 +933,7 @@ void wifi_manager( void * pvParameters ){
 					else{
 						/* In this scenario the connection was lost beyond repair: kick start the AP! */
 						retries = 0;
-
+#ifndef NOT_CLEAR_STA
 						/* if it was a restore attempt connection, we clear the bit */
 						xEventGroupClearBits(wifi_manager_event_group, WIFI_MANAGER_REQUEST_RESTORE_STA_BIT);
 
@@ -942,8 +943,8 @@ void wifi_manager( void * pvParameters ){
 						}
 
 						/* save empty connection info in NVS memory */
-						//wifi_manager_save_sta_config();
-
+						wifi_manager_save_sta_config();
+#endif
 						/* start SoftAP */
 						wifi_manager_send_message(ORDER_START_AP, NULL);
 					}
